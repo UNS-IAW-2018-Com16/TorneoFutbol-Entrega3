@@ -1,0 +1,81 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+<div>
+	<img id="logoFixture" src="../public/images/fixture.png" alt="Imagen No Disponible">
+	<div class="panel" id="fixture">
+		<div>
+			<button type="button" class="btn btn-primary">Agregar Fecha</button>
+		</div>
+		{% for fecha in fechas %}
+		<div class="panel panel-info fixture">
+			<div class="panel-heading">
+				<p> Fecha {{ loop.index }} </p>
+			</div>
+			<div class="panel-body">
+				{% for partido in fecha.partidos %}
+				<div class = "partidoFechaFixture">
+					<p>{{ partido.equipoLocal }} - {{partido.equipoVisitante}}</p>
+				</div>
+				<div class = "modYelim">
+					<button type="button" class="btn btn-primary">Modificar</button>
+					<button type="button" class="btn btn-primary">Eliminar</button>
+				</div>
+				{% endfor %}
+				<div>
+					<button type="button" class="btn btn-primary" id="agregarPartido" data-toggle="modal" href="#modalAgregarPartido" data-id="{{fecha.ID}}">Agregar Partido</button>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+
+<div class="modal" id="modalAgregarPartido" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h2 class="modal-title text-center" id="ModalCenterTitle">Agregar Partido</h2>
+			</div>
+			<form method="POST" action="./partido">
+				<div class="modal-body">
+					
+					{{ csrf_field() }}
+					<div class="form-group">
+						<label for="equipoLocal">Equipo Local:</label>
+						<input type="text" class="form-control" placeholder="Nombre del Equipo" name="equipoLocal">        		
+					</div>
+					<div class="form-group">
+						<label for="equipoVisita">Equipo Visitante:</label>
+						<input type="text" class="form-control" placeholder="Nombre del Equipo" name="equipoVisita">        		
+					</div>
+					<div class="form-group">
+						<label for="cancha">Cancha:</label>
+						<input type="text" class="form-control" placeholder="Cancha del partido" name="cancha">        		
+					</div>
+					<div class="form-group">
+						<label for="fecha">Fecha:</label>
+						<input type="text" class="form-control" placeholder="Fecha del partido" name="fecha">        		
+					</div>
+					<div class="form-group">
+						<label for="hora">Hora:</label>
+						<input type="text" class="form-control" placeholder="Hora del partido" name="hora">        		
+					</div>
+					<div class="form-group">
+						<label for="arbitro">Arbitro:</label>
+						<input type="text" class="form-control" placeholder="Arbitro del partido" name="arbitro">        		
+					</div>
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+					<button type="submit" class="btn btn-primary" id="btnAgregarPartido">Guardar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

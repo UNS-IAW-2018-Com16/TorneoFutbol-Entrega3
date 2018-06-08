@@ -81,11 +81,11 @@ return [
             'driver'   => 'mongodb',
             'host'     => env('DB_HOST', 'ds145380.mlab.com'),
             'port'     => env('DB_PORT', '45380'),
-            'database' => env('DB_DATABASE', 'ligadefutbol'),
-            'username' => env('DB_USERNAME', 'admin'),
-            'password' => env('DB_PASSWORD', 'admin'),
+            'database' => env('DB_DATABASE'),
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
             'options'  => [
-                'database' => 'ligadefutbol' // sets the authentication database required by mongo 3
+                'database' => env('DB_DATABASE') // sets the authentication database required by mongo 3
             ]
         ],
     ],

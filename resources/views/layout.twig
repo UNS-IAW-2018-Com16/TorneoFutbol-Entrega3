@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Liga de Futbol</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Boostrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- Nuestro CSS -->
+    <link rel="stylesheet" href="css/estiloGeneral.css">
+    <link rel="shortcout icon" type="image/x-icon" href="images/Favicon/logo.ico">
+	<!-- JQuery-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<!-- Bootstrap JS-->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+  </head>
+  <body>
+  	<div class="container">
+  		<!-- Encabezado -->
+  		<div class="header">
+  			<img id="titulo" src="../public/images/banner.png">
+  		</div>
+
+	    <div class="top-right links">
+            {% if auth_guest() %}
+            	<a href="{{ route('login') }}">Login</a>
+                <a href="{{ route('register') }}">Register</a>
+            {% else %}
+                <a href="{{ url('/home') }}">Home</a>
+            {% endif %}
+        </div>
+		
+  		<!-- Barra de navegacion -->
+		<ul class="nav nav-tabs">
+			<li>
+				<a href="./fixture">Fixture</a>
+			</li>
+			<li>
+				<a href="./equipos">Equipos</a>
+			</li>
+			<li>
+				<a href="./editores">Editores</a>
+			</li>
+		</ul>
+    
+    	{% block body %}{% endblock %}
+
+	</div>
+	
+  </body>
+</html>

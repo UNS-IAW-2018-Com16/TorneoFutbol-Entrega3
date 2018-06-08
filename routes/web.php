@@ -11,9 +11,17 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('fixture', 'FixtureController@index');
+
+Route::get('equipos', 'EquipoController@index');
+
+Route::get('editores', 'EditorController@index');
+
+Route::post('nuevoPartido', 'FixtureController@nuevoPartido');
+
+Route::post('nuevoEquipo', 'EquipoController@nuevoEquipo');
+
+Route::post('nuevoEditor', 'EditorController@nuevoEditor');
 
 Auth::routes();
 

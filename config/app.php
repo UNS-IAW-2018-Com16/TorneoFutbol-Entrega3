@@ -160,6 +160,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        Jenssegers\Mongodb\MongodbServiceProvider::class,
+        TwigBridge\ServiceProvider::class,
+        Jenssegers\Mongodb\MongodbQueueServiceProvider::class,
+
     ],
 
     /*
@@ -209,6 +213,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        'Twig' => TwigBridge\Facade\Twig::class,
     ],
 
 ];

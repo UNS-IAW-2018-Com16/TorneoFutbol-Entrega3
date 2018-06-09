@@ -4,8 +4,38 @@
 <div>
 	<div class="panel">
 		<div>
-			<button type="button" class="btn btn-primary" data-toggle="modal" href="#modalAgregarEquipo">Agregar Equipo</button>
+			<button type="button" class="btn btn-success btn-lg" data-toggle="modal" href="#modalAgregarEquipo">Agregar Equipo</button>
 		</div>
+	</div>
+	<div>
+		{% for equipo in equipos %}
+			<div class="media">
+				<div class="media-left media-top">
+					<img src="images/{{equipo.nombre}}/{{equipo.escudo}}" class="media-object">
+				</div>
+				<div class="media-body">
+					<h4 class="media-heading">{{equipo.nombre}}</h4>
+
+					{% for jugador in equipo.plantel %}
+						<div class="media">
+							<div class="media-left media-middle">
+								<img src="images/{{equipo.nombre}}/Plantel/{{jugador.foto}}" class="media-object">
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading">{{jugador.apellido}}, {{jugador.nombre}}</h4>
+								<p>Fecha de Naciemiento: {{jugador.fechaNacimiento}} <br>
+								Peso: {{jugador.peso}} <br>
+								Altura: {{jugador.altura}} <br>
+								Edad: {{jugador.edad}} <br>
+								Numero de Camiseta: {{jugador.numeroCamiseta}} <br>
+								Pie Habil: {{jugador.pieHabil}} <br>
+								Posicion: {{jugador.posicion}}</p>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		{% endfor %}
 	</div>
 </div>
 <div class="modal" id="modalAgregarEquipo" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
@@ -17,7 +47,7 @@
 				</button>
 				<h2 class="modal-title text-center" id="ModalCenterTitle">Nuevo Equipo</h2>
 			</div>
-			<form method="POST" action="./nuevoEquipo">
+			<form method="POST" action="./equipos/nuevoEquipo">
 				<div class="modal-body">
 					{{ csrf_field() }}
 					<div class="form-group">

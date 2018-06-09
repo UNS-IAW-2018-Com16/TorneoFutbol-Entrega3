@@ -5,8 +5,12 @@
 	<img id="logoFixture" src="../public/images/fixture.png" alt="Imagen No Disponible">
 	<div class="panel" id="fixture">
 		<div>
-			<button type="button" class="btn btn-primary">Agregar Fecha</button>
+			<form method="POST" action="./fixture/agregarFecha">
+				{{ csrf_field() }}
+				<button type="submit" class="btn btn-success btn-lg">Agregar Fecha</button>
+			</form>
 		</div>
+		<br>
 		{% for fecha in fechas %}
 		<div class="panel panel-info fixture">
 			<div class="panel-heading">
@@ -15,16 +19,22 @@
 			<div class="panel-body">
 				{% for partido in fecha.partidos %}
 				<div class = "partidoFechaFixture">
-					<p>{{ partido.equipoLocal }} - {{partido.equipoVisitante}}</p>
+					<p>{{ partido.nombreEquipoLocal }} - {{partido.nombreEquipoVisitante }}</p>
 				</div>
 				<div class = "modYelim">
-					<button type="button" class="btn btn-primary">Modificar</button>
-					<button type="button" class="btn btn-primary">Eliminar</button>
+					<button type="button" class="btn btn-info btn-md">Modificar</button>
+					<form method="POST" action="./fixture/eliminarPartido/{{partido._id}}">
+						{{ csrf_field() }}
+						<button type="submit" class="btn btn-danger btn-md">Eliminar</button>
+					</form>
+					
 				</div>
 				{% endfor %}
+				<br>
 				<div>
-					<button type="button" class="btn btn-primary" id="agregarPartido" data-toggle="modal" href="#modalAgregarPartido" data-id="{{fecha.ID}}">Agregar Partido</button>
+					<button type="button" class="btn btn-primary btn-lg" id="agregarPartido" data-toggle="modal" href="#modalAgregarPartido" data-id="{{fecha._id}}">Agregar Partido</button>
 				</div>
+				<br>
 			</div>
 		</div>
 		{% endfor %}
@@ -40,7 +50,7 @@
 				</button>
 				<h2 class="modal-title text-center" id="ModalCenterTitle">Agregar Partido</h2>
 			</div>
-			<form method="POST" action="./partido">
+			<form method="POST" action="./fixture/nuevoPartido">
 				<div class="modal-body">
 					
 					{{ csrf_field() }}

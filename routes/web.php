@@ -11,17 +11,31 @@
 |
 */
 
+//Vistas principales
+
 Route::get('fixture', 'FixtureController@index');
 
 Route::get('equipos', 'EquipoController@index');
 
 Route::get('editores', 'EditorController@index');
 
-Route::post('nuevoPartido', 'FixtureController@nuevoPartido');
+//Partidos
 
-Route::post('nuevoEquipo', 'EquipoController@nuevoEquipo');
+Route::post('fixture/nuevoPartido', 'FixtureController@nuevoPartido');
 
-Route::post('nuevoEditor', 'EditorController@nuevoEditor');
+Route::post('fixture/eliminarPartido/{id}', 'FixtureController@eliminarPartido');
+
+//Fechas
+
+Route::post('fixture/agregarFecha', 'FixtureController@agregarFecha');
+
+//Equipos
+
+Route::post('equipos/nuevoEquipo', 'EquipoController@nuevoEquipo');
+
+//Editores
+
+Route::post('editores/nuevoEditor', 'EditorController@nuevoEditor');
 
 Auth::routes();
 

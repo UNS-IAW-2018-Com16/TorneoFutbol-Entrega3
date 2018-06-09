@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\JoinTablas;
 use App\Equipos;
 
 class EquipoController extends Controller
 {
   public function index(){
-    return view('equipos');
+    $helper = new JoinTablas();
+    $equipos = $helper->juntarEquiposJugadores(Equipos::all());
+    return view('equipos', ['equipos' => $equipos]);
   }
 
   public function nuevoEquipo(){

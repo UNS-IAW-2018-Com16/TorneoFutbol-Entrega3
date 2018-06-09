@@ -7,6 +7,8 @@ use Jenssegers\Mongodb\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    public $timestamps = false;
+
     use Notifiable;
 
     protected $collection = 'usuarios';

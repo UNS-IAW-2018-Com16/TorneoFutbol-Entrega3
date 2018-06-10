@@ -1,20 +1,12 @@
-var IDPartido;
-
 $("#modalAgregarPartido").on('shown.bs.modal', function(event) {
-	IDPartido = $(event.relatedTarget).data('id');
+	var IDFecha = $(event.relatedTarget).data('id');
+	console.log(IDFecha);
+	$('#hiddenFecha').val(IDFecha);
 });
 
-$('#btnAgregarPartido').click(function (event){
+$("#modalModificarPartido").on('shown.bs.modal', function(event) {
+	var IDPartido = $(event.relatedTarget).data('id');
 	console.log(IDPartido);
-	var target = event.target;
-
-	var datosPartido = {
-
-	};
-
-	$.post('./api/datosPartido',
-	datosPartido,
-	function (data, status){
-		$("#modalAgregarPartido").modal('hide');
-	});
+	$('#hiddenPartido').val(IDPartido);
 });
+

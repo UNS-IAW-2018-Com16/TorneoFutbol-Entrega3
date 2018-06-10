@@ -13,13 +13,30 @@
 				<div class="media-left media-top">
 					<img src="images/{{equipo.nombre}}/{{equipo.escudo}}" class="media-object">
 				</div>
+				
 				<div class="media-body">
 					<h4 class="media-heading">{{equipo.nombre}}</h4>
-
+					<div class="media-right media-top">
+						<form method="POST" action="./equipos/eliminarEquipo/{{equipo._id}}">
+							{{ csrf_field() }}
+							<button type="submit" class="close" aria-label="Eliminar">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</form>
+					</div>
 					{% for jugador in equipo.plantel %}
 						<div class="media">
 							<div class="media-left media-middle">
 								<img src="images/{{equipo.nombre}}/Plantel/{{jugador.foto}}" class="media-object">
+							</div>
+							<div class="media-right media-top">
+								<form method="POST" action="./equipos/eliminarJugador/{{jugador._id}}">
+									{{ csrf_field() }}
+									<input type="hidden" name="IDEquipo" value="{{equipo._id}}">
+									<button type="submit" class="close" aria-label="Eliminar">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</form>
 							</div>
 							<div class="media-body">
 								<h4 class="media-heading">{{jugador.apellido}}, {{jugador.nombre}}</h4>
@@ -33,6 +50,9 @@
 							</div>
 						</div>
 					{% endfor %}
+				</div>
+				<div>
+					<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" href="#modalAgregarJugador" data-id="{{equipo._id}}">Agregar Jugador</button>
 				</div>
 			</div>
 		{% endfor %}
@@ -57,10 +77,74 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-					<button type="submit" class="btn btn-primary" id="btnAgregarEquipo">Guardar</button>
+					<button type="submit" class="btn btn-primary">Guardar</button>
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
+
+<div class="modal" id="modalAgregarJugador" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h2 class="modal-title text-center" id="ModalCenterTitle">Nuevo Jugador</h2>
+			</div>
+			<form method="POST" action="./equipos/nuevoJugador">
+				<div class="modal-body">
+					{{ csrf_field() }}
+					<div class="form-group">
+						<label for="nombreJugador">Nombre:</label>
+						<input type="text" class="form-control" placeholder="Nombre del Jugador" name="nombre">        		
+					</div>
+					<div class="form-group">
+						<label for="apellidoJugador">Apellido:</label>
+						<input type="text" class="form-control" placeholder="Apellido del Jugador" name="apellido">        		
+					</div>
+					<div class="form-group">
+						<label for="fechaNacimiento">Fecha de Nacimiento:</label>
+						<input type="text" class="form-control" placeholder="dia/mes/año" name="fechaNacimiento">        		
+					</div>
+					<div class="form-group">
+						<label for="peso">Peso:</label>
+						<input type="text" class="form-control" placeholder="Peso del Jugador (en kg)" name="peso">        		
+					</div>
+					<div class="form-group">
+						<label for="altura">Altura:</label>
+						<input type="text" class="form-control" placeholder="Altura del Jugador (en cm)" name="altura">        		
+					</div>
+					<div class="form-group">
+						<label for="edad">Edad:</label>
+						<input type="text" class="form-control" placeholder="Edad del Jugador" name="edad">        		
+					</div>
+					<div class="form-group">
+						<label for="numeroCamiseta">Numero de Camiseta:</label>
+						<input type="number" class="form-control" min="0" placeholder="Numero de Camiseta" name="numeroCamiseta">        		
+					</div>
+					<div class="form-group">
+						<label for="pieHabil">Pie Habil:</label>
+						<input type="text" class="form-control" placeholder="Izquierda/Derecha" name="pieHabil">        		
+					</div>
+					<div class="form-group">
+						<label for="posicion">Posicion:</label>
+						<input type="text" class="form-control" placeholder="Posicion" name="posicion">        		
+					</div>
+					<div class="form-group">
+						<label for="foto">Foto:</label>
+						<input type="text" class="form-control" placeholder="Foto del Jugador" name="foto">        		
+					</div>
+					<input type="hidden" id="hiddenEquipo" name="IDEquipo" value="#">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+					<button type="submit" class="btn btn-primary">Guardar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="js/equipos.js"></script>
 {% endblock %}

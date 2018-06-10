@@ -288,3 +288,7 @@ iframe {
 	float: left;
 	border: none;
 }
+
+#btnAgregarPartido {
+	margin-top: 10px;
+}

@@ -12,18 +12,18 @@ class JoinTablas {
   public function juntarFechasPartidos($fechas) {
     
     foreach ($fechas as &$fecha) {
-    	$arreglo = $fecha->partidos;
-    	
-    	for($i = 0; $i<count($arreglo); $i++){
-    		
-    		$partido = Partidos::find($arreglo[$i]);
-    		$partido->nombreEquipoLocal = Equipos::find($partido->equipoLocal)->nombre;
-      		$partido->nombreEquipoVisitante = Equipos::find($partido->equipoVisitante)->nombre;
+      
+    	$arregloPartidos = $fecha->partidos;
 
-      		$arreglo[$i] = $partido;
-      		
-    	}
-     	$fecha->partidos = $arreglo;
+      foreach ($arregloPartidos as &$partido){
+        
+        $partido = Partidos::find($partido);
+        $partido->nombreEquipoLocal = Equipos::find($partido->equipoLocal)->nombre;
+        $partido->nombreEquipoVisitante = Equipos::find($partido->equipoVisitante)->nombre;
+
+      }
+
+      $fecha->partidos = $arregloPartidos;
     }
 
     return $fechas;
@@ -31,12 +31,13 @@ class JoinTablas {
 
   public function juntarEquiposJugadores($equipos){
     foreach ($equipos as &$equipo) {
-      $arreglo = $equipo->plantel;
-      for($i = 0; $i<count($arreglo); $i++){
-        $jugador = Jugadores::find($arreglo[$i]);
-        $arreglo[$i] = $jugador;
+      $arregloPlantel = $equipo->plantel;
+
+      foreach ($arregloPlantel as &$jugador) {
+        $jugador = Jugadores::find($jugador);
       }
-      $equipo->plantel = $arreglo;
+
+      $equipo->plantel = $arregloPlantel;
     }
     return $equipos;
   }

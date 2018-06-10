@@ -25,6 +25,7 @@ class FixtureController extends Controller
   }
 
   public function nuevoPartido(){
+
     $partido = new Partidos;
 
     $IDLocal = Equipos::where('nombre', request()->equipoLocal)->get()->first()->_id;
@@ -42,33 +43,54 @@ class FixtureController extends Controller
 
     $partido->save();
 
-    dd($partido);
-    //guardar en el arreglo de fecha
+    $IDFecha = request()->IDFecha;
+    $fecha = Fechas::find($IDFecha);
+    $arregloPartidos = $fecha->partidos;
+    $IDPartido = new \MongoDB\BSON\ObjectId($partido->_id);
+    array_push($arregloPartidos, $IDPartido);
+    $fecha->partidos = $arregloPartidos;
+    $fecha->save();
 
     return redirect('fixture');
-
   }
 
   public function eliminarPartido($id){
-    $helper = new JoinTablas();
-    $fechas = $helper->juntarFechasPartidos(Fechas::all());
+    $objectID = new \MongoDB\BSON\ObjectId($id);
+    
+    $fecha = Fechas::find(request()->IDFecha);
+    $arregloPartidos = $fecha->partidos;
 
-    $encontre = false;
-
-    for ($i=0; $i < count($fechas) && !$encontre ; $i++) { 
-
-      $arregloPartidos = $fechas[$i]->partidos;
-
-      for ($j=0; $j < count($arregloPartidos) && !$encontre ; $j++) { 
-          if ($arregloPartidos[$j]->_id == $id){
-            $partido = $arregloPartidos[$j];
-            $partido->delete();
-            $encontre = true;
-          } 
-      }
-
-      Partidos::destroy($id);
+    if (($key = array_search($objectID, $arregloPartidos)) !== null) {
+      unset($arregloPartidos[$key]);
     }
+
+    $fecha->partidos = $arregloPartidos;
+    $fecha->save();
+
+    Partidos::destroy($id);
+
+    return redirect('fixture');
+  }
+
+  public function modificarPartido(){
+    $IDPartido = request()->IDPartido;
+    $partido = Partidos::find($IDPartido);
+    $partido->cancha = request()->cancha;
+    $partido->fecha = request()->fecha;
+    $partido->hora = request()->hora;
+    $partido->arbitro = request()->arbitro;
+    $equipoLocal = Equipos::where('nombre', request()->equipoLocal)->get()->first()->_id;
+    $IDLocal = new \MongoDB\BSON\ObjectId($equipoLocal);
+    $equipoVisitante = Equipos::where('nombre', request()->equipoVisita)->get()->first()->_id;
+    $IDVisita = new \MongoDB\BSON\ObjectId($equipoVisitante);
+    $partido->equipoLocal = $IDLocal;
+    $partido->equipoVisitante = $IDVisita;
+    $partido->golesLocal = request()->golesLocal;
+    $partido->golesVisita = request()->golesVisita;
+
+    $partido->save();
+
+    return redirect('fixture');
   }
 
 }

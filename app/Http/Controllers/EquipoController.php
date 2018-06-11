@@ -38,8 +38,13 @@ class EquipoController extends Controller
 
   public function eliminarEquipo($id){
   	$equipo = Equipos::find($id);
-    //$equipo->delete();
+    $plantel = $equipo->plantel;
+    foreach($plantel as &$jugador){
+      $miJugador = Jugadores::find($jugador);
+      $miJugador->delete();
+    }
 
+    $equipo->delete();
     // HAY QUE ELIMINAR TODOS LOS JUGADORES DEL PLANTEL !!! ??????? 
     
     return redirect('equipos');
@@ -91,7 +96,24 @@ class EquipoController extends Controller
   }
 
   public function modificarJugador(){
+    $IDJugador = request()->IDJugador;
     
+    $jugador = Jugadores::find($IDJugador);
+
+    $jugador->nombre = request()->nombre;
+    $jugador->apellido = request()->apellido;
+    $jugador->fechaNacimiento = request()->fechaNacimiento;
+    $jugador->peso = request()->peso;
+    $jugador->altura = request()->altura;
+    $jugador->edad = request()->edad;
+    $jugador->foto = request()->foto;
+    $jugador->numeroCamiseta = request()->numeroCamiseta;
+    $jugador->pieHabil = request()->pieHabil;
+    $jugador->posicion = request()->posicion;
+
+    $jugador->save();
+
+    return redirect('equipos');
   }
 
 }

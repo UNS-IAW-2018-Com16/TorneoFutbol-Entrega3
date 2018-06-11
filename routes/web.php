@@ -27,6 +27,8 @@ Route::post('fixture/eliminarPartido/{id}', 'FixtureController@eliminarPartido')
 
 Route::post('fixture/modificarPartido','FixtureController@modificarPartido');
 
+Route::post('fixture/asignarEditor', 'FixtureController@asignarEditor');
+
 //Fechas
 
 Route::post('fixture/agregarFecha', 'FixtureController@agregarFecha');
@@ -41,9 +43,14 @@ Route::post('equipos/nuevoJugador', 'EquipoController@nuevoJugador');
 
 Route::post('equipos/eliminarJugador/{id}', 'EquipoController@eliminarJugador');
 
+Route::post('equipos/modificarJugador', 'EquipoController@modificarJugador');
+
+
 //Editores
 
 Route::post('editores/nuevoEditor', 'EditorController@nuevoEditor');
+
+Route::post('editores/eliminarEditor', 'EditorController@eliminarEditor');
 
 Auth::routes();
 

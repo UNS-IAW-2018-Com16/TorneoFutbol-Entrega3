@@ -11,7 +11,7 @@ class User extends Authenticatable
 
     use Notifiable;
 
-    protected $collection = 'usuarios';
+    protected $collection = 'admin';
 
     /**
      * The attributes that are mass assignable.

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Fechas;
 use App\Partidos;
 use App\Equipos;
+use App\Usuarios;
 use App\Http\Controllers\JoinTablas;
 
 class FixtureController extends Controller
@@ -25,7 +26,7 @@ class FixtureController extends Controller
   }
 
   public function nuevoPartido(){
-
+    
     $partido = new Partidos;
 
     $IDLocal = Equipos::where('nombre', request()->equipoLocal)->get()->first()->_id;
@@ -91,6 +92,22 @@ class FixtureController extends Controller
     $partido->save();
 
     return redirect('fixture');
+  }
+
+  public function asignarEditor(){
+    $IDPartido = new \MongoDB\BSON\ObjectId(request()->IDPartido);
+    $mailEditor = request()->mailEditor;
+
+    $usuario = Usuarios::where('mail',$mailEditor)->get()->first();
+    if($usuario->esEditor == true){
+      $arregloPartidos = $usuario->partidosAsignados;
+      array_push($arregloPartidos, $IDPartido);
+      $usuario->partidosAsignados = $arregloPartidos;
+      $usuario->save();
+    }
+
+    return redirect('fixture');
+
   }
 
 }

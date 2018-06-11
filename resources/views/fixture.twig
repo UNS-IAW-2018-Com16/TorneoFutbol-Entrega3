@@ -21,14 +21,14 @@
 				<div class = "partidoFechaFixture col-sm-12">
 					<p>{{ partido.nombreEquipoLocal }} - {{partido.nombreEquipoVisitante }}</p>
 				</div>
-				<div>
-					<button type="button" class="btn btn-info btn-md col-sm-6" data-toggle="modal" href="#modalModificarPartido" data-id="{{partido._id}}">Modificar</button>
-					<form class="col-sm-6" method="POST" action="./fixture/eliminarPartido/{{partido._id}}">
+				<div class="col-md-12">
+					<button type="button" class="btn btn-info btn-md col-md-4" data-toggle="modal" href="#modalModificarPartido" data-id="{{partido._id}}">Modificar</button>
+					<form class="col-md-4" method="POST" action="./fixture/eliminarPartido/{{partido._id}}">
 						{{ csrf_field() }}
 						<input type="hidden" name="IDFecha" value="{{fecha._id}}">
-						<button type="submit" class="btn btn-danger btn-md col-sm-12">Eliminar</button>
-					</form>
-					
+						<button type="submit" class="btn btn-danger btn-md">Eliminar</button>
+					</form>	
+					<button type="button" class="btn btn-warning btn-md col-md-4" data-toggle="modal" href="#modalAsignarEditor" data-id="{{partido._id}}">Asignar Editor</button>				
 				</div>
 				{% endfor %}
 				<div>
@@ -136,6 +136,32 @@
 						<input type="number" class="form-control" min="0" placeholder="Goles" name="golesVisita">        		
 					</div>
 					<input type="hidden" id="hiddenPartido" name="IDPartido" value="#">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+					<button type="submit" class="btn btn-primary">Guardar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="modal" id="modalAsignarEditor" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h2 class="modal-title text-center" id="ModalCenterTitle">Asignar Editor</h2>
+			</div>
+			<form method="POST" action="./fixture/asignarEditor">
+				<div class="modal-body">
+					{{ csrf_field() }}
+					<div class="form-group">
+						<label for="mailEditor">Mail del Editor:</label>
+						<input type="text" class="form-control" placeholder="Ejemplo: juanperez@hotmail.com" name="mailEditor">        		
+					</div>
+					<input type="hidden" id="hiddenEditor" name="IDPartido" value="#">
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

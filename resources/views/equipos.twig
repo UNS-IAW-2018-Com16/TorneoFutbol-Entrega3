@@ -48,6 +48,9 @@
 								Pie Habil: {{jugador.pieHabil}} <br>
 								Posicion: {{jugador.posicion}}</p>
 							</div>
+							<div>
+								<button type="button" class="btn btn-primary btn-md" data-toggle="modal" href="#modalModificarJugador" data-id="{{jugador._id}}">Modificar Informacion</button>
+							</div>
 						</div>
 					{% endfor %}
 				</div>
@@ -137,6 +140,69 @@
 						<input type="text" class="form-control" placeholder="Foto del Jugador" name="foto">        		
 					</div>
 					<input type="hidden" id="hiddenEquipo" name="IDEquipo" value="#">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+					<button type="submit" class="btn btn-primary">Guardar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal" id="modalModificarJugador" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h2 class="modal-title text-center" id="ModalCenterTitle">Modificar Jugador</h2>
+			</div>
+			<form method="POST" action="./equipos/modificarJugador">
+				<div class="modal-body">
+					{{ csrf_field() }}
+					<div class="form-group">
+						<label for="nombreJugador">Nombre:</label>
+						<input type="text" class="form-control" placeholder="Nombre del Jugador" name="nombre">        		
+					</div>
+					<div class="form-group">
+						<label for="apellidoJugador">Apellido:</label>
+						<input type="text" class="form-control" placeholder="Apellido del Jugador" name="apellido">        		
+					</div>
+					<div class="form-group">
+						<label for="fechaNacimiento">Fecha de Nacimiento:</label>
+						<input type="text" class="form-control" placeholder="dia/mes/año" name="fechaNacimiento">        		
+					</div>
+					<div class="form-group">
+						<label for="peso">Peso:</label>
+						<input type="text" class="form-control" placeholder="Peso del Jugador (en kg)" name="peso">        		
+					</div>
+					<div class="form-group">
+						<label for="altura">Altura:</label>
+						<input type="text" class="form-control" placeholder="Altura del Jugador (en cm)" name="altura">        		
+					</div>
+					<div class="form-group">
+						<label for="edad">Edad:</label>
+						<input type="text" class="form-control" placeholder="Edad del Jugador" name="edad">        		
+					</div>
+					<div class="form-group">
+						<label for="numeroCamiseta">Numero de Camiseta:</label>
+						<input type="number" class="form-control" min="0" placeholder="Numero de Camiseta" name="numeroCamiseta">        		
+					</div>
+					<div class="form-group">
+						<label for="pieHabil">Pie Habil:</label>
+						<input type="text" class="form-control" placeholder="Izquierda/Derecha" name="pieHabil">        		
+					</div>
+					<div class="form-group">
+						<label for="posicion">Posicion:</label>
+						<input type="text" class="form-control" placeholder="Posicion" name="posicion">        		
+					</div>
+					<div class="form-group">
+						<label for="foto">Foto:</label>
+						<input type="text" class="form-control" placeholder="Foto del Jugador" name="foto">        		
+					</div>
+					<input type="hidden" id="hiddenJugador" name="IDJugador" value="#">
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

@@ -10,3 +10,9 @@ $("#modalModificarPartido").on('shown.bs.modal', function(event) {
 	$('#hiddenPartido').val(IDPartido);
 });
 
+$("#modalAsignarEditor").on('shown.bs.modal', function(event) {
+	var IDPartido = $(event.relatedTarget).data('id');
+	console.log(IDPartido);
+	$('#hiddenEditor').val(IDPartido);
+});
+

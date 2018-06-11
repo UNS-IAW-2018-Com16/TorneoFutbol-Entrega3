@@ -13,45 +13,47 @@
 
 //Vistas principales
 
-Route::get('fixture', 'FixtureController@index');
+Route::get('fixture', 'FixtureController@index')->middleware('auth');
 
-Route::get('equipos', 'EquipoController@index');
+Route::get('equipos', 'EquipoController@index')->middleware('auth');
 
-Route::get('editores', 'EditorController@index');
+Route::get('editores', 'EditorController@index')->middleware('auth');
 
 //Partidos
 
-Route::post('fixture/nuevoPartido', 'FixtureController@nuevoPartido');
+Route::post('fixture/nuevoPartido', 'FixtureController@nuevoPartido')->middleware('auth');
 
-Route::post('fixture/eliminarPartido/{id}', 'FixtureController@eliminarPartido');
+Route::post('fixture/eliminarPartido/{id}', 'FixtureController@eliminarPartido')->middleware('auth');
 
-Route::post('fixture/modificarPartido','FixtureController@modificarPartido');
+Route::post('fixture/modificarPartido','FixtureController@modificarPartido')->middleware('auth');
 
-Route::post('fixture/asignarEditor', 'FixtureController@asignarEditor');
+Route::post('fixture/asignarEditor', 'FixtureController@asignarEditor')->middleware('auth');
 
 //Fechas
 
-Route::post('fixture/agregarFecha', 'FixtureController@agregarFecha');
+Route::post('fixture/agregarFecha', 'FixtureController@agregarFecha')->middleware('auth');
 
 //Equipos
 
-Route::post('equipos/nuevoEquipo', 'EquipoController@nuevoEquipo');
+Route::post('equipos/nuevoEquipo', 'EquipoController@nuevoEquipo')->middleware('auth');
 
-Route::post('equipos/eliminarEquipo/{id}', 'EquipoController@eliminarEquipo');
+Route::post('equipos/eliminarEquipo/{id}', 'EquipoController@eliminarEquipo')->middleware('auth');
 
-Route::post('equipos/nuevoJugador', 'EquipoController@nuevoJugador');
+Route::post('equipos/nuevoJugador', 'EquipoController@nuevoJugador')->middleware('auth');
 
-Route::post('equipos/eliminarJugador/{id}', 'EquipoController@eliminarJugador');
+Route::post('equipos/eliminarJugador/{id}', 'EquipoController@eliminarJugador')->middleware('auth');
 
-Route::post('equipos/modificarJugador', 'EquipoController@modificarJugador');
+Route::post('equipos/modificarJugador', 'EquipoController@modificarJugador')->middleware('auth');
 
 
 //Editores
 
-Route::post('editores/nuevoEditor', 'EditorController@nuevoEditor');
+Route::post('editores/nuevoEditor', 'EditorController@nuevoEditor')->middleware('auth');
 
-Route::post('editores/eliminarEditor', 'EditorController@eliminarEditor');
+Route::post('editores/eliminarEditor', 'EditorController@eliminarEditor')->middleware('auth');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/', 'Auth\LoginController@index');

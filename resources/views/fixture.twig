@@ -7,7 +7,7 @@
 		<div>
 			<form method="POST" action="./fixture/agregarFecha">
 				{{ csrf_field() }}
-				<button type="submit" class="btn btn-success btn-lg">Agregar Fecha</button>
+				<button type="submit" id="btnAgregarFecha" class="btn btn-success btn-lg">Agregar Fecha</button>
 			</form>
 		</div>
 		<br>
@@ -33,6 +33,12 @@
 				{% endfor %}
 				<div>
 					<button type="button" id="btnAgregarPartido" class="btn btn-primary btn-lg col-sm-12" data-toggle="modal" href="#modalAgregarPartido" data-id="{{fecha._id}}">Agregar Partido</button>
+				</div>
+				<div>
+					<form method="POST" action="./fixture/eliminarFecha/{{fecha._id}}">
+						{{ csrf_field() }}
+						<button type="submit" id="btnEliminarFecha" class="btn btn-danger btn-lg col-sm-12">Eliminar Fecha</button>
+					</form>
 				</div>
 			</div>
 

@@ -1,14 +1,15 @@
 body {
-	background-image: url("../images/Fondos/EstiloGeneral/fondo.png");
+	background-image: url("../images/fondo.png");
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center; 
 }
 
-#titulo {
+#titulo, #btnAgregarEquipo, #btnAgregarFecha {
 	display: block;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 10px;
 }
 
 .header .btn:hover {
@@ -115,12 +116,12 @@ ul.nav {
 .panel-info {
 	float: left;
 	border: none;
-	margin-left: 50px;
-	margin-bottom: 50px;
+	margin-left: 20px;
+	margin-bottom: 20px;
 }
 
 .fixture {
-	height: 400px;
+	height: 500px;
 	width: 500px;
 }
 
@@ -289,6 +290,34 @@ iframe {
 	border: none;
 }
 
-#btnAgregarPartido {
+#btnAgregarPartido, #btnEliminarFecha {
+	margin: 5px;
+}
+
+.close {
+	color: red;
+	opacity: 0.9;
+	font-size: 30px;
+}
+
+#btnModificarInformacion {
+	margin-left: 210px;
+}
+
+#cerrarSesion {
+	color: red;
+	font-size: 15px;
+	font-weight: 700px;
+}
+
+#btnAgregarEditor, #btnEliminarEditor {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 	margin-top: 10px;
+}
+
+#btnAgregarJugador {
+	margin: 20px;
+	margin-left: 170px;
 }

@@ -33,15 +33,18 @@ Route::post('fixture/asignarEditor', 'FixtureController@asignarEditor')->middlew
 
 Route::post('fixture/agregarFecha', 'FixtureController@agregarFecha')->middleware('auth');
 
+Route::post('fixture/eliminarFecha/{id}', 'FixtureController@eliminarFecha')->middleware('auth');
+
 //Equipos
+Route::get('equipos/obtenerEquipo/{id}', 'EquipoController@obtenerEquipo')->middleware('auth');
 
 Route::post('equipos/nuevoEquipo', 'EquipoController@nuevoEquipo')->middleware('auth');
 
-Route::post('equipos/eliminarEquipo/{id}', 'EquipoController@eliminarEquipo')->middleware('auth');
+Route::post('equipos/eliminarEquipo', 'EquipoController@eliminarEquipo')->middleware('auth');
 
 Route::post('equipos/nuevoJugador', 'EquipoController@nuevoJugador')->middleware('auth');
 
-Route::post('equipos/eliminarJugador/{id}', 'EquipoController@eliminarJugador')->middleware('auth');
+Route::post('equipos/eliminarJugador', 'EquipoController@eliminarJugador')->middleware('auth');
 
 Route::post('equipos/modificarJugador', 'EquipoController@modificarJugador')->middleware('auth');
 

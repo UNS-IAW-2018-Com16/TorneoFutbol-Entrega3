@@ -20,15 +20,15 @@
   	<div class="container">
   		<!-- Encabezado -->
   		<div class="header">
-  			<img id="titulo" src="images/Fondos/EstiloGeneral/banner.png">
+  			<img id="titulo" src="images/Fondos/EstiloGeneral/banner.png" alt="Imagen No Disponible">
   		</div>
 
 	    <div class="top-right links">
             {% if auth_guest() %}
-            	<a href="{{ route('login') }}">Login</a>
-                <a href="{{ route('register') }}">Register</a>
+            	<!--<a href="{{ route('login') }}">Login</a>
+                <a href="{{ route('register') }}">Register</a>-->
             {% else %}
-                <a href="{{ url('/home') }}">Cerrar Sesion</a>
+                <a href="{{ url('/home') }}" id="cerrarSesion">Cerrar Sesion</a>
             {% endif %}
         </div>
 		

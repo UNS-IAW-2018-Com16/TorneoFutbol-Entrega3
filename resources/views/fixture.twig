@@ -9,8 +9,24 @@
 				{{ csrf_field() }}
 				<button type="submit" id="btnAgregarFecha" class="btn btn-success btn-lg">Agregar Fecha</button>
 			</form>
+			<a href="./fixture/formModificarEditores" id="btnModificarEditores" class="btn btn-warning btn-lg">Modificar Editores</a>
 		</div>
-		<br>
+		{% if app.session.has('flash_message') %}
+			<div class="alert alert-success alert-block">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>	
+				<strong>{{ app.session.get('flash_message') }}</strong>
+			</div>
+		{% endif %}
+		{% if app.session.has('flash_message_error') %}
+			<div class="alert alert-danger alert-block">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>	
+				<strong>{{ app.session.get('flash_message_error') }}</strong>
+			</div>
+		{% endif %}
 		{% for fecha in fechas %}
 		<div class="panel panel-info fixture">
 			<div class="panel-heading">
@@ -21,24 +37,16 @@
 				<div class = "partidoFechaFixture col-sm-12">
 					<p>{{ partido.nombreEquipoLocal }} - {{partido.nombreEquipoVisitante }}</p>
 				</div>
-				<div class="col-md-12">
-					<button type="button" class="btn btn-info btn-md col-md-4" data-toggle="modal" href="#modalModificarPartido" data-id="{{partido._id}}">Modificar</button>
-					<form class="col-md-4" method="POST" action="./fixture/eliminarPartido/{{partido._id}}">
-						{{ csrf_field() }}
-						<input type="hidden" name="IDFecha" value="{{fecha._id}}">
-						<button type="submit" class="btn btn-danger btn-md">Eliminar</button>
-					</form>	
-					<button type="button" class="btn btn-warning btn-md col-md-4" data-toggle="modal" href="#modalAsignarEditor" data-id="{{partido._id}}">Asignar Editor</button>				
+				<div>
+					<a href="./fixture/formModificarPartido/{{partido._id}}" class="btn btn-info col-md-6">Modificar</a>
+					<button type="button" href="#modalEliminarPartido" data-toggle="modal" data-idfecha="{{fecha._id}}" data-idpartido="{{partido._id}}" class="btn btn-danger col-md-4" style="margin-left: 50px">Eliminar</button>			
 				</div>
 				{% endfor %}
 				<div>
-					<button type="button" id="btnAgregarPartido" class="btn btn-primary btn-lg col-sm-12" data-toggle="modal" href="#modalAgregarPartido" data-id="{{fecha._id}}">Agregar Partido</button>
+					<a href="./fixture/formNuevoPartido/{{fecha._id}}" id="btnAgregarPartido" class="btn btn-primary btn-lg col-sm-12">Agregar Partido</a>
 				</div>
 				<div>
-					<form method="POST" action="./fixture/eliminarFecha/{{fecha._id}}">
-						{{ csrf_field() }}
-						<button type="submit" id="btnEliminarFecha" class="btn btn-danger btn-lg col-sm-12">Eliminar Fecha</button>
-					</form>
+					<button type="button" id="btnEliminarFecha" class="btn btn-danger btn-lg col-sm-12" href="#modalEliminarFecha" data-toggle="modal" data-idfecha="{{fecha._id}}">Eliminar Fecha</button>
 				</div>
 			</div>
 
@@ -47,135 +55,55 @@
 	</div>
 </div>
 
-<div class="modal" id="modalAgregarPartido" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+<div class="modal" id="modalEliminarPartido" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h2 class="modal-title text-center" id="ModalCenterTitle">Agregar Partido</h2>
+				<h2 class="modal-title text-center" id="ModalCenterTitle">Advertencia</h2>
 			</div>
-			<form method="POST" action="./fixture/nuevoPartido">
-				<div class="modal-body">
-					
+			<div class="modal-body">
+				<h3>Esta a punto de eliminar un partido.</h3>
+				<h3>¿Está seguro que desea continuar?</h3>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="cancelarModal" class="btn btn-warning col-md-2" data-dismiss="modal">Cancelar</button>
+				<form method="POST" action="./fixture/eliminarPartido" class="col-md-2">
 					{{ csrf_field() }}
-					<div class="form-group">
-						<label for="equipoLocal">Equipo Local:</label>
-						<input type="text" class="form-control" placeholder="Nombre del Equipo" name="equipoLocal">        		
-					</div>
-					<div class="form-group">
-						<label for="equipoVisita">Equipo Visitante:</label>
-						<input type="text" class="form-control" placeholder="Nombre del Equipo" name="equipoVisita">        		
-					</div>
-					<div class="form-group">
-						<label for="cancha">Cancha:</label>
-						<input type="text" class="form-control" placeholder="Cancha del partido" name="cancha">        		
-					</div>
-					<div class="form-group">
-						<label for="fecha">Fecha:</label>
-						<input type="text" class="form-control" placeholder="Fecha del partido" name="fecha">        		
-					</div>
-					<div class="form-group">
-						<label for="hora">Hora:</label>
-						<input type="text" class="form-control" placeholder="Hora del partido" name="hora">        		
-					</div>
-					<div class="form-group">
-						<label for="arbitro">Arbitro:</label>
-						<input type="text" class="form-control" placeholder="Arbitro del partido" name="arbitro">        		
-					</div>
-					<input type="hidden" id="hiddenFecha" name="IDFecha" value="#">
-					
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-					<button type="submit" class="btn btn-primary">Guardar</button>
-				</div>
-			</form>
+					<input type="hidden" id="hiddenEliminarPartido" name="IDPartido" value="#">
+					<input type="hidden" id="hiddenEliminarPartidoFecha" name="IDFecha" value="#">
+					<button type="submit" class="btn btn-success">Confirmar</button>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>
 
-<div class="modal" id="modalModificarPartido" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+<div class="modal" id="modalEliminarFecha" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h2 class="modal-title text-center" id="ModalCenterTitle">Modificar Partido</h2>
+				<h2 class="modal-title text-center" id="ModalCenterTitle">Advertencia</h2>
 			</div>
-			<form method="POST" action="./fixture/modificarPartido">
-				<div class="modal-body">
-					
+			<div class="modal-body">
+				<h3>Esta a punto de eliminar un fecha, esto implicaría eliminar todos sus partidos.</h3>
+				<h3>¿Está seguro que desea continuar?</h3>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="cancelarModal" class="btn btn-warning col-md-2" data-dismiss="modal">Cancelar</button>
+				<form method="POST" action="./fixture/eliminarFecha" class="col-md-2">
 					{{ csrf_field() }}
-					<div class="form-group">
-						<label for="equipoLocal">Equipo Local:</label>
-						<input type="text" class="form-control" placeholder="Nombre del Equipo" name="equipoLocal">        		
-					</div>
-					<div class="form-group">
-						<label for="equipoVisita">Equipo Visitante:</label>
-						<input type="text" class="form-control" placeholder="Nombre del Equipo" name="equipoVisita">        		
-					</div>
-					<div class="form-group">
-						<label for="cancha">Cancha:</label>
-						<input type="text" class="form-control" placeholder="Cancha del partido" name="cancha">        		
-					</div>
-					<div class="form-group">
-						<label for="fecha">Fecha:</label>
-						<input type="text" class="form-control" placeholder="Fecha del partido" name="fecha">        		
-					</div>
-					<div class="form-group">
-						<label for="hora">Hora:</label>
-						<input type="text" class="form-control" placeholder="Hora del partido" name="hora">        		
-					</div>
-					<div class="form-group">
-						<label for="arbitro">Arbitro:</label>
-						<input type="text" class="form-control" placeholder="Arbitro del partido" name="arbitro">        		
-					</div>
-					<div class="form-group">
-						<label for="golesLocal">Goles Local:</label>
-						<input type="number" class="form-control" min="0" placeholder="Goles" name="golesLocal">        		
-					</div>
-					<div class="form-group">
-						<label for="golesVisita">Goles Visita:</label>
-						<input type="number" class="form-control" min="0" placeholder="Goles" name="golesVisita">        		
-					</div>
-					<input type="hidden" id="hiddenPartido" name="IDPartido" value="#">
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-					<button type="submit" class="btn btn-primary">Guardar</button>
-				</div>
-			</form>
+					<input type="hidden" id="hiddenEliminarFecha" name="IDFecha" value="#">
+					<button type="submit" class="btn btn-success">Confirmar</button>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>
-<div class="modal" id="modalAsignarEditor" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h2 class="modal-title text-center" id="ModalCenterTitle">Asignar Editor</h2>
-			</div>
-			<form method="POST" action="./fixture/asignarEditor">
-				<div class="modal-body">
-					{{ csrf_field() }}
-					<div class="form-group">
-						<label for="mailEditor">Mail del Editor:</label>
-						<input type="text" class="form-control" placeholder="Ejemplo: juanperez@hotmail.com" name="mailEditor">        		
-					</div>
-					<input type="hidden" id="hiddenEditor" name="IDPartido" value="#">
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-					<button type="submit" class="btn btn-primary">Guardar</button>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-<script type="text/javascript" src="js/fixture.js"></script>
+<script type="text/javascript" src="{{ asset('js/fixture.js') }}"></script>
 {% endblock %}

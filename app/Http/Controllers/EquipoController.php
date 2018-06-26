@@ -13,9 +13,6 @@ class EquipoController extends Controller
     $helper = new JoinTablas();
     $equipos = $helper->juntarEquiposJugadores(Equipos::all());
 
-    /*$argentina = Equipos::where('nombre','Argentina');
-    $equipoVista = $helper->juntarEquiposJugadores($argentina);*/
-
     return view('equipos', ['equipos' => $equipos ]);
   }
 
@@ -41,6 +38,8 @@ class EquipoController extends Controller
 
     $equipo->save();
 
+    \Session::flash('flash_message','El equipo ha sido cargado correctamente.');
+
     return redirect('/equipos');
   }
 
@@ -54,26 +53,23 @@ class EquipoController extends Controller
       $miJugador->delete();
     }
 
-    //rmdir('images/' . $nombreEquipo);
-
     $equipo->delete();
+
+    \Session::flash('flash_message','El equipo ha sido eliminado correctamente.');
     
     return redirect('equipos');
   }
 
-  /*public function obtenerEquipo($id){
-    $helper = new JoinTablas();
-    $equipos = $helper->juntarEquiposJugadores(Equipos::all());
+  public function formNuevoJugador($id){
 
-    $miEquipo = Equipos::find($id);
-    $equipoVista = $helper->juntarEquiposJugadores($miEquipo);
-    
-    return view('equipos', ['equipos' => $equipos, 'equipoVista' => $equipoVista]);
-  }*/
+    $pieHabil = ["Derecha", "Izquierda", "Ambas"];
+    $posiciones = ["Arquero", "Defensor", "Volante", "Delantero"];
 
-  public function nuevoJugador(){
-    $IDEquipo = request()->IDEquipo;
-    $equipo = Equipos::find($IDEquipo);
+    return view('nuevoJugador', ['IDEquipo' => $id, "pieHabil" => $pieHabil, "posiciones" => $posiciones]);
+  }
+
+  public function nuevoJugador($id){
+    $equipo = Equipos::find($id);
     $nombreEquipo = $equipo->nombre;
 
     $jugador = new Jugadores;
@@ -109,6 +105,8 @@ class EquipoController extends Controller
     $equipo->plantel = $arregloPlantel;
     $equipo->save();
 
+    \Session::flash('flash_message','El jugador ha sido agregado correctamente.');
+
     return redirect('equipos');
   }
 
@@ -129,13 +127,23 @@ class EquipoController extends Controller
 
     Jugadores::destroy($id);
 
+    \Session::flash('flash_message','El jugador ha sido eliminado correctamente.');
+
     return redirect('equipos');
   }
 
-  public function modificarJugador(){
-    $IDJugador = request()->IDJugador;
+  public function formModificarJugador($idEquipo, $idJugador){
+    $jugador = Jugadores::find($idJugador);
+    $equipo = Equipos::find($idEquipo);
+    $pieHabil = ["Derecha", "Izquierda", "Ambas"];
+    $posiciones = ["Arquero", "Defensor", "Volante", "Delantero"];
+
+    return view('modificarJugador', ['jugador' => $jugador, 'equipo' => $equipo, "pieHabil" => $pieHabil, "posiciones" => $posiciones]);
+  }
+
+  public function modificarJugador($idEquipo, $idJugador){
     
-    $jugador = Jugadores::find($IDJugador);
+    $jugador = Jugadores::find($idJugador);
 
     $jugador->nombre = request()->nombre;
     $jugador->apellido = request()->apellido;
@@ -143,12 +151,27 @@ class EquipoController extends Controller
     $jugador->peso = request()->peso;
     $jugador->altura = request()->altura;
     $jugador->edad = request()->edad;
-    $jugador->foto = request()->foto;
     $jugador->numeroCamiseta = request()->numeroCamiseta;
     $jugador->pieHabil = request()->pieHabil;
     $jugador->posicion = request()->posicion;
 
+    $image = request()->file('foto');
+    if ($image != null){
+      $equipo = Equipos::find($idEquipo);
+      $nombreEquipo = $equipo->nombre;
+      $name = $_FILES['foto']['name'];
+      $directorio = 'images/' . $nombreEquipo . '/Plantel';
+      if(!is_dir($directorio)){
+        mkdir($directorio);
+      }
+      $destinationPath = public_path($directorio);
+      $image->move($destinationPath, $name);
+      $jugador->foto = $name;
+    }
+
     $jugador->save();
+
+    \Session::flash('flash_message','El jugador ha sido modificado correctamente.');
 
     return redirect('equipos');
   }

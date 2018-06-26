@@ -8,19 +8,18 @@
 	<!-- Boostrap CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<!-- Nuestro CSS -->
-    <link rel="stylesheet" href="css/estiloGeneral.css">
+    <link rel="stylesheet" href="{{ asset('css/estiloGeneral.css') }}">
     <link rel="shortcout icon" type="image/x-icon" href="images/Favicon/logo.ico">
 	<!-- JQuery-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<!-- Bootstrap JS-->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    
   </head>
   <body>
   	<div class="container">
   		<!-- Encabezado -->
   		<div class="header">
-  			<img id="titulo" src="images/Fondos/EstiloGeneral/banner.png" alt="Imagen No Disponible">
+  			<img id="titulo" src="{{ asset('images/Fondos/EstiloGeneral/banner.png') }}" alt="Imagen No Disponible">
   		</div>
 
 	    <div class="top-right links">
@@ -35,13 +34,10 @@
   		<!-- Barra de navegacion -->
 		<ul class="nav nav-tabs">
 			<li>
-				<a href="./fixture">Fixture</a>
+				<a href="/fixture">Fixture</a>
 			</li>
 			<li>
-				<a href="./equipos">Equipos</a>
-			</li>
-			<li>
-				<a href="./editores">Editores</a>
+				<a href="/equipos">Equipos</a>
 			</li>
 		</ul>
     

@@ -24,3 +24,7 @@ $("#modalEliminarJugador").on('shown.bs.modal', function(event) {
 	$('#hiddenConfirmarJugadorEquipo').val(IDEquipo);
 	$('#hiddenConfirmarJugador').val(IDJugador);
 });
+
+function goBack(){
+	window.history.back();
+}

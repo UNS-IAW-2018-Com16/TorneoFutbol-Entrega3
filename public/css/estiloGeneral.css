@@ -5,11 +5,12 @@ body {
 	background-position: center; 
 }
 
-#titulo, #btnAgregarEquipo, #btnAgregarFecha {
-	display: block;
+#titulo, #btnAgregarEquipo, #btnAgregarFecha, #btnAgregarJugador, #btnModificarEditores, #tablaUsuarios {
+	display: table;
     margin-left: auto;
     margin-right: auto;
     margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .header .btn:hover {
@@ -317,7 +318,40 @@ iframe {
 	margin-top: 10px;
 }
 
-#btnAgregarJugador {
-	margin: 20px;
-	margin-left: 170px;
+#plantel {
+	width: auto;
+}
+
+label {
+	color: black;
+	font-size: large;
+}
+h1 {
+	color: black;
+	text-align: center;
+	font-weight: bolder;
+}
+
+#cancelarModal {
+	margin-left: 360px;
+}
+
+tr {
+	text-align: center;
+}
+
+#cancelarForm {
+	margin-left: 900px;
+}
+
+#busqueda {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 400px;
+}
+th {
+	font-size:25px;
+	text-align: center;
+	color: black;
+	font-weight: bold;
 }

@@ -163,6 +163,7 @@ return [
         Jenssegers\Mongodb\MongodbServiceProvider::class,
         TwigBridge\ServiceProvider::class,
         Jenssegers\Mongodb\MongodbQueueServiceProvider::class,
+        Laracasts\Flash\FlashServiceProvider::class,
 
     ],
 
@@ -214,6 +215,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Twig' => TwigBridge\Facade\Twig::class,
+        'Flash' => Laracasts\Flash\Flash::class,
     ],
 
 ];

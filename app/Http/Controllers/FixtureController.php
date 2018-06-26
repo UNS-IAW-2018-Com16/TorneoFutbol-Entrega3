@@ -22,11 +22,12 @@ class FixtureController extends Controller
     $fecha = new Fechas;
     $fecha->partidos = [];
     $fecha->save();
+    \Session::flash('flash_message','La fecha ha sido creada correctamente.');
     return redirect('fixture');
   }
 
-  public function eliminarFecha($id){
-    $fecha = Fechas::find($id);
+  public function eliminarFecha(){
+    $fecha = Fechas::find(request()->IDFecha);
 
     $partidos = $fecha->partidos;
     $editores = Usuarios::where('esEditor', true)->get();
@@ -35,7 +36,7 @@ class FixtureController extends Controller
       $objectID = new \MongoDB\BSON\ObjectId($miPartido->_id);
       foreach ($editores as &$editor) {
         $arregloPartidosAsignados = $editor->partidosAsignados;
-        if (($key2 = array_search($objectID, $arregloPartidosAsignados)) !== null){
+        if (($key2 = array_search($objectID, $arregloPartidosAsignados)) !== false){
           unset($arregloPartidosAsignados[$key2]);
           $nuevosPartidosAsignados = array_values($arregloPartidosAsignados);
           $editor->partidosAsignados = $nuevosPartidosAsignados;
@@ -46,31 +47,37 @@ class FixtureController extends Controller
       $miPartido->delete(); 
     }
 
-    Fechas::destroy($id);
+    Fechas::destroy(request()->IDFecha);
+
+    \Session::flash('flash_message','La fecha ha sido eliminada correctamente.');
 
     return redirect('fixture');
   }
 
-  public function nuevoPartido(){
+  public function formNuevoPartido($id){
+    $equipos = Equipos::all();
+    $editores = Usuarios::where('esEditor', true)->get();
 
-    $IDFecha = request()->IDFecha;
-    $fecha = Fechas::find($IDFecha);
+    return view('nuevoPartido', ['IDFecha' => $id, 'equipos' => $equipos, 'editores' => $editores]);
+  }
+
+    public function nuevoPartido($id){
+    $fecha = Fechas::find($id);
     $arregloPartidos = $fecha->partidos;
     
     $equipoLocal = Equipos::where('nombre', request()->equipoLocal)->get()->first();
     $equipoVisita = Equipos::where('nombre', request()->equipoVisita)->get()->first();
-
-    if (count($arregloPartidos) < 3 && $equipoLocal != null && $equipoVisita != null){
+    $editor = Usuarios::where('nombre', request()->editor)->get()->first();
+    if (count($arregloPartidos) < 3){
       $partido = new Partidos;
 
       $IDLocal = $equipoLocal->_id;
       $IDVisita = $equipoVisita->_id;
       
-      
-    	$partido->cancha = request()->cancha;
-    	$partido->fecha = request()->fecha;
-    	$partido->hora = request()->hora;
-    	$partido->arbitro = request()->arbitro;
+      $partido->cancha = request()->cancha;
+      $partido->fecha = request()->fecha;
+      $partido->hora = request()->hora;
+      $partido->arbitro = request()->arbitro;
       $partido->equipoLocal = new \MongoDB\BSON\ObjectId($IDLocal);
       $partido->equipoVisitante = new \MongoDB\BSON\ObjectId($IDVisita);
       $partido->golesLocal = null;
@@ -82,13 +89,29 @@ class FixtureController extends Controller
       array_push($arregloPartidos, $IDPartido);
       $fecha->partidos = $arregloPartidos;
       $fecha->save();
+
+      if ($editor != null){
+        $partidosAsignados = $editor->partidosAsignados;
+        $key = array_search($IDPartido, $partidosAsignados); 
+        if ($key === false){
+          array_push($partidosAsignados, $IDPartido);
+          $editor->partidosAsignados = $partidosAsignados;
+          $editor->save();
+        }
+      }
+
+      \Session::flash('flash_message','El partido ha sido agregado correctamente.');
+
+    } else {
+      \Session::flash('flash_message_error','Se puede agregar como maximo 3 partidos por fecha.');
     }
 
     return redirect('fixture');
   }
 
-  public function eliminarPartido($id){
-    $objectID = new \MongoDB\BSON\ObjectId($id);
+
+  public function eliminarPartido(){
+    $objectID = new \MongoDB\BSON\ObjectId(request()->IDPartido);
     
     $fecha = Fechas::find(request()->IDFecha);
     $arregloPartidos = $fecha->partidos;
@@ -101,7 +124,7 @@ class FixtureController extends Controller
       $editores = Usuarios::where('esEditor', true)->get();
       foreach ($editores as &$editor) {
         $arregloPartidosAsignados = $editor->partidosAsignados;
-        if (($key2 = array_search($objectID, $arregloPartidosAsignados)) !== null){
+        if (($key2 = array_search($objectID, $arregloPartidosAsignados)) !== false){
           unset($arregloPartidosAsignados[$key2]);
           $nuevosPartidosAsignados = array_values($arregloPartidosAsignados);
           $editor->partidosAsignados = $nuevosPartidosAsignados;
@@ -113,50 +136,107 @@ class FixtureController extends Controller
     $fecha->partidos = $nuevoArreglo;
     $fecha->save();
 
-    Partidos::destroy($id);
+    Partidos::destroy(request()->IDPartido);
+
+    \Session::flash('flash_message','El partido ha sido eliminado correctamente.');
 
     return redirect('fixture');
   }
 
-  public function modificarPartido(){
+  public function formModificarPartido($id){
+    $partido = Partidos::find($id);
+    $equipos = Equipos::all();
+    $editores = Usuarios::where('esEditor', true)->get();
 
+    $IDPartido = new \MongoDB\BSON\ObjectId($id);
+    $nombreEditor = null;
+    foreach ($editores as &$editor) {
+      $partidosAsignados = $editor->partidosAsignados;
+      foreach ($partidosAsignados as &$partidoActual) {
+        if($partidoActual == $IDPartido){
+          $nombreEditor = $editor->nombre;
+        }
+      }
+    }
+
+
+    return view('modificarPartido', ['equipos' => $equipos, 'partido' => $partido, 'editores' => $editores, 'editorActual' => $nombreEditor]);
+  }
+
+  public function modificarPartido($id){
     $nombreLocal = Equipos::where('nombre', request()->equipoLocal)->get()->first();
     $nombreVisita = Equipos::where('nombre', request()->equipoVisita)->get()->first();
 
-    if ($nombreLocal != null && $nombreVisita != null){
-      $equipoLocal = $nombreLocal->_id;
-      $IDLocal = new \MongoDB\BSON\ObjectId($equipoLocal);
-      $equipoVisitante = $nombreVisita->_id;
-      $IDVisita = new \MongoDB\BSON\ObjectId($equipoVisitante);
-      $IDPartido = request()->IDPartido;
-      $partido = Partidos::find($IDPartido);
-      $partido->cancha = request()->cancha;
-      $partido->fecha = request()->fecha;
-      $partido->hora = request()->hora;
-      $partido->arbitro = request()->arbitro;
-      $partido->equipoLocal = $IDLocal;
-      $partido->equipoVisitante = $IDVisita;
-      $partido->golesLocal = request()->golesLocal;
-      $partido->golesVisita = request()->golesVisita;
-      $partido->save();
-     }
+    $equipoLocal = $nombreLocal->_id;
+    $IDLocal = new \MongoDB\BSON\ObjectId($equipoLocal);
+    $equipoVisitante = $nombreVisita->_id;
+    $IDVisita = new \MongoDB\BSON\ObjectId($equipoVisitante);
+    
+    $partido = Partidos::find($id);
+    $partido->cancha = request()->cancha;
+    $partido->fecha = request()->fecha;
+    $partido->hora = request()->hora;
+    $partido->arbitro = request()->arbitro;
+
+    $partido->equipoLocal = $IDLocal;
+    $partido->equipoVisitante = $IDVisita;
+
+    $partido->golesLocal = request()->golesLocal;
+    $partido->golesVisita = request()->golesVisita;
+
+    $partido->save();
+    $IDPartido = new \MongoDB\BSON\ObjectId($id);
+
+    $editores = Usuarios::where('esEditor', true)->get();
+    foreach ($editores as &$editor) {
+      if ($editor->nombre != request()->editor){
+        $arregloPartidosAsignados = $editor->partidosAsignados;
+        if (($key2 = array_search($IDPartido, $arregloPartidosAsignados)) !== false){
+          unset($arregloPartidosAsignados[$key2]);
+          $nuevosPartidosAsignados = array_values($arregloPartidosAsignados);
+          $editor->partidosAsignados = $nuevosPartidosAsignados;
+          $editor->save();
+        }
+      }
+    }
+
+    $editor = Usuarios::where('nombre', request()->editor)->get()->first();
+
+    if ($editor != null){
+        $partidosAsignados = $editor->partidosAsignados;
+        $key = array_search($IDPartido, $partidosAsignados); 
+        if ($key === false){
+            array_push($partidosAsignados, $IDPartido);
+            $editor->partidosAsignados = $partidosAsignados;
+            $editor->save();
+        }  
+    }
+
+    \Session::flash('flash_message','El partido ha sido modificado correctamente.');
 
     return redirect('fixture');
   }
 
-  public function asignarEditor(){
-    $IDPartido = new \MongoDB\BSON\ObjectId(request()->IDPartido);
-    $usuario = Usuarios::where('mail', request()->mailEditor)->get()->first();
-    if ($usuario != null){
-      if($usuario->esEditor == true){
-        $arregloPartidos = $usuario->partidosAsignados;
-        array_push($arregloPartidos, $IDPartido);
-        $usuario->partidosAsignados = $arregloPartidos;
+  public function formModificarEditores(){
+    $usuarios = Usuarios::all();
+
+    return view('editores', ['usuarios' => $usuarios]);
+  }
+
+  public function modificarEditores(){
+    $usuarios = Usuarios::all();
+    foreach ($usuarios as &$usuario){
+      if(isset($_POST[$usuario->_id])){
+        $usuario->esEditor = true;
+        $usuario->save();
+      } else {
+        $usuario->esEditor = false;
+        $usuario->partidosAsignados = [];
         $usuario->save();
       }
     }
+    \Session::flash('flash_message','La lista de editores ha sido actualizada correctamente.');
     return redirect('fixture');
-
   }
 
 }

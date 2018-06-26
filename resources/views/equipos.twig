@@ -2,47 +2,33 @@
 
 {% block body %}
 <div>
-	<!--<div class="dropdown" id="filtroEquipos">
-		<button class="btn btn-default dropdown-toggle" type="button" id="botonEquipos" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Equipos <span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu" id="listaEquipos" aria-labelledby="dropdownMenu1">
-			{% for equipo in equipos %}
-				<form method="GET" action="./equipos/obtenerEquipo/{{equipo._id}}">
-					{{ csrf_field() }}
-					<li><button type="submit">{{equipo.nombre}}</button></li>
-				</form>
-			{% endfor %}
-		</ul>
-	</div>-->
 	<div class="panel">
 		<div>
 			<button type="button" id="btnAgregarEquipo" class="btn btn-success btn-lg" data-toggle="modal" href="#modalAgregarEquipo">Agregar Equipo</button>
 		</div>
 	</div>
+	{% if app.session.has('flash_message') %}
+		<div class="alert alert-success alert-block">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>	
+			<strong>{{ app.session.get('flash_message') }}</strong>
+		</div>
+	{% endif %}
 	{% for equipo in equipos %}
 		<div>
 			<div class="media">
 				<div class="media-left media-top">
 					<img src="images/{{equipo.nombre}}/{{equipo.escudo}}" class="media-object" alt="Logo No Disponible">
 				</div>
-				<div class="media-body">
+				<div class="media-body" >
 					<h4 class="media-heading">{{equipo.nombre}}</h4>
-					<div class="media-right media-top">
-						<button type="button" class="btn close" aria-label="Eliminar" data-toggle="modal" data-id="{{equipo._id}}" href="#modalEliminarEquipo">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
 					{% for jugador in equipo.plantel %}
 						<div class="media">
 							<div class="media-left media-middle">
 								<img src="images/{{equipo.nombre}}/Plantel/{{jugador.foto}}" class="media-object" alt="Imagen No Disponible">
 							</div>
-							<div class="media-right media-top">
-								<button type="button" class="btn close" aria-label="Eliminar" data-toggle="modal" data-idE="{{equipo._id}}" data-idJ="{{jugador._id}}" href="#modalEliminarJugador">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="media-body">
+							<div class="media-body" id="plantel">
 								<h4 class="media-heading">{{jugador.apellido}}, {{jugador.nombre}}</h4>
 								<p>Fecha de Naciemiento: {{jugador.fechaNacimiento}} <br>
 								Peso: {{jugador.peso}} <br>
@@ -52,14 +38,24 @@
 								Pie Habil: {{jugador.pieHabil}} <br>
 								Posicion: {{jugador.posicion}}</p>
 							</div>
+							<div class="media-right media-top">
+								<button type="button" class="btn close" aria-label="Eliminar" data-toggle="modal" data-idE="{{equipo._id}}" data-idJ="{{jugador._id}}" href="#modalEliminarJugador">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
 							<div>
-								<button type="button" id="btnModificarInformacion" class="btn btn-warning btn-md" data-toggle="modal" href="#modalModificarJugador" data-id="{{jugador._id}}">Modificar Informacion</button>
+								<a href="./equipos/formModificarJugador/{{equipo._id}}/{{jugador._id}}" id="btnModificarInformacion" class="btn btn-warning btn-md">Modificar Informacion</a>
 							</div>
 						</div>
 					{% endfor %}
 				</div>
+				<div class="media-right media-top">
+						<button type="button" class="btn close" aria-label="Eliminar" data-toggle="modal" data-id="{{equipo._id}}" href="#modalEliminarEquipo">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
 				<div>
-					<button type="button" id="btnAgregarJugador" class="btn btn-success btn-lg" data-toggle="modal" href="#modalAgregarJugador" data-id="{{equipo._id}}">Agregar Jugador</button>
+					<a href="./equipos/formNuevoJugador/{{equipo._id}}" id="btnAgregarJugador" class="btn btn-success btn-lg">Agregar Jugador</a>
 				</div>
 			</div>
 		</div>
@@ -107,143 +103,16 @@
 			</div>
 			<div class="modal-body">
 				<h3>Eliminar un equipo implica que tambien serán eliminados todos sus jugadores.</h3>
-				<br>
 				<h3>¿Está seguro que desea continuar?</h3>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Cancelar</button>
-				<form method="POST" action="./equipos/eliminarEquipo" enctype="multipart/form-data">
+				<button type="button" id="cancelarModal" class="btn btn-warning col-md-2" data-dismiss="modal">Cancelar</button>
+				<form method="POST" action="./equipos/eliminarEquipo" clas="col-md-2">
 					{{ csrf_field() }}
 					<input type="hidden" id="hiddenConfirmarEquipo" name="IDEquipo" value="#">
 					<button type="submit" class="btn btn-success">Confirmar</button>
 				</form>
 			</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal" id="modalAgregarJugador" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h2 class="modal-title text-center" id="ModalCenterTitle">Nuevo Jugador</h2>
-			</div>
-			<form method="POST" action="./equipos/nuevoJugador" enctype="multipart/form-data">
-				<div class="modal-body">
-					{{ csrf_field() }}
-					<div class="form-group">
-						<label for="nombreJugador">Nombre:</label>
-						<input type="text" class="form-control" placeholder="Nombre del Jugador" name="nombre">        		
-					</div>
-					<div class="form-group">
-						<label for="apellidoJugador">Apellido:</label>
-						<input type="text" class="form-control" placeholder="Apellido del Jugador" name="apellido">        		
-					</div>
-					<div class="form-group">
-						<label for="fechaNacimiento">Fecha de Nacimiento:</label>
-						<input type="text" class="form-control" placeholder="dia/mes/año" name="fechaNacimiento">        		
-					</div>
-					<div class="form-group">
-						<label for="peso">Peso:</label>
-						<input type="text" class="form-control" placeholder="Peso del Jugador (en kg)" name="peso">        		
-					</div>
-					<div class="form-group">
-						<label for="altura">Altura:</label>
-						<input type="text" class="form-control" placeholder="Altura del Jugador (en cm)" name="altura">        		
-					</div>
-					<div class="form-group">
-						<label for="edad">Edad:</label>
-						<input type="text" class="form-control" placeholder="Edad del Jugador" name="edad">        		
-					</div>
-					<div class="form-group">
-						<label for="numeroCamiseta">Numero de Camiseta:</label>
-						<input type="number" class="form-control" min="0" placeholder="Numero de Camiseta" name="numeroCamiseta">        		
-					</div>
-					<div class="form-group">
-						<label for="pieHabil">Pie Habil:</label>
-						<input type="text" class="form-control" placeholder="Izquierda/Derecha" name="pieHabil">        		
-					</div>
-					<div class="form-group">
-						<label for="posicion">Posicion:</label>
-						<input type="text" class="form-control" placeholder="Posicion" name="posicion">        		
-					</div>
-					<div class="form-group">
-						<label for="foto">Foto:</label>
-						<input type="file" class="form-control-file" id="foto" name="foto">
-					</div>
-					<input type="hidden" id="hiddenEquipo" name="IDEquipo" value="#">
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-					<button type="submit" class="btn btn-primary">Guardar</button>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-
-<div class="modal" id="modalModificarJugador" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h2 class="modal-title text-center" id="ModalCenterTitle">Modificar Jugador</h2>
-			</div>
-			<form method="POST" action="./equipos/modificarJugador" enctype="multipart/form-data">
-				<div class="modal-body">
-					{{ csrf_field() }}
-					<div class="form-group">
-						<label for="nombreJugador">Nombre:</label>
-						<input type="text" class="form-control" placeholder="Nombre del Jugador" name="nombre">        		
-					</div>
-					<div class="form-group">
-						<label for="apellidoJugador">Apellido:</label>
-						<input type="text" class="form-control" placeholder="Apellido del Jugador" name="apellido">        		
-					</div>
-					<div class="form-group">
-						<label for="fechaNacimiento">Fecha de Nacimiento:</label>
-						<input type="text" class="form-control" placeholder="dia/mes/año" name="fechaNacimiento">        		
-					</div>
-					<div class="form-group">
-						<label for="peso">Peso:</label>
-						<input type="text" class="form-control" placeholder="Peso del Jugador (en kg)" name="peso">        		
-					</div>
-					<div class="form-group">
-						<label for="altura">Altura:</label>
-						<input type="text" class="form-control" placeholder="Altura del Jugador (en cm)" name="altura">        		
-					</div>
-					<div class="form-group">
-						<label for="edad">Edad:</label>
-						<input type="text" class="form-control" placeholder="Edad del Jugador" name="edad">        		
-					</div>
-					<div class="form-group">
-						<label for="numeroCamiseta">Numero de Camiseta:</label>
-						<input type="number" class="form-control" min="0" placeholder="Numero de Camiseta" name="numeroCamiseta">        		
-					</div>
-					<div class="form-group">
-						<label for="pieHabil">Pie Habil:</label>
-						<input type="text" class="form-control" placeholder="Izquierda/Derecha" name="pieHabil">        		
-					</div>
-					<div class="form-group">
-						<label for="posicion">Posicion:</label>
-						<input type="text" class="form-control" placeholder="Posicion" name="posicion">        		
-					</div>
-					<div class="form-group">
-						<label for="foto">Foto:</label>
-						<input type="file" class="form-control-file" id="foto">
-					</div>
-					<input type="hidden" id="hiddenJugador" name="IDJugador" value="#">
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-					<button type="submit" class="btn btn-primary">Guardar</button>
-				</div>
-			</form>
 		</div>
 	</div>
 </div>
@@ -259,12 +128,11 @@
 			</div>
 			<div class="modal-body">
 				<h3>Esta a punto de eliminar todos los datos de un jugador.</h3>
-				<br>
 				<h3>¿Está seguro que desea continuar?</h3>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Cancelar</button>
-				<form method="POST" action="./equipos/eliminarJugador" enctype="multipart/form-data">
+				<button type="button" id="cancelarModal" class="btn btn-warning col-md-2" data-dismiss="modal">Cancelar</button>
+				<form method="POST" action="./equipos/eliminarJugador" class="col-md-2">
 					{{ csrf_field() }}
 					<input type="hidden" id="hiddenConfirmarJugadorEquipo" name="IDEquipo" value="#">
 					<input type="hidden" id="hiddenConfirmarJugador" name="IDJugador" value="#">
@@ -274,5 +142,5 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript" src="js/equipos.js"></script>
+<script type="text/javascript" src="{{ asset('js/equipos.js') }}"></script>
 {% endblock %}

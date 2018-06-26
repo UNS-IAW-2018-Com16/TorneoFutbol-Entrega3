@@ -1,0 +1,75 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+<h1> Modificar Jugador </h1>
+<form method="POST" action="../modificarJugador/{{equipo._id}}/{{jugador._id}}" enctype="multipart/form-data">
+	{{ csrf_field() }}
+	<div class="form-row">
+		<div class="form-group col-md-6">
+			<label for="nombreJugador">Nombre</label>
+			<input type="text" class="form-control" placeholder="Nombre del Jugador" name="nombre" value="{{jugador.nombre}}" required>        		
+		</div>
+		<div class="form-group col-md-6">
+			<label for="apellidoJugador">Apellido</label>
+			<input type="text" class="form-control" placeholder="Apellido del Jugador" name="apellido" value="{{jugador.apellido}}" required>        		
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col-md-3">
+			<label for="fechaNacimiento">Fecha de Nacimiento</label>
+			<input type="text" class="form-control" placeholder="dd/mm/aaaa" name="fechaNacimiento" value="{{jugador.fechaNacimiento}}" required>        		
+		</div>
+		<div class="form-group col-md-3">
+			<label for="peso">Peso</label>
+			<input type="text" class="form-control" placeholder="Peso del Jugador (en kg)" name="peso" value="{{jugador.peso}}" required>        		
+		</div>
+		<div class="form-group col-md-3">
+			<label for="altura">Altura</label>
+			<input type="text" class="form-control" placeholder="Altura del Jugador (en cm)" name="altura" value="{{jugador.altura}}" required>        		
+		</div>
+		<div class="form-group col-md-3">
+			<label for="edad">Edad</label>
+			<input type="text" class="form-control" placeholder="Edad del Jugador" name="edad" value="{{jugador.edad}}" required>        		
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col-md-3">
+			<label for="numeroCamiseta">Numero de Camiseta</label>
+			<input type="number" class="form-control" min="0" placeholder="Numero de Camiseta" name="numeroCamiseta" value="{{jugador.numeroCamiseta}}" required>        		
+		</div>
+		<div class="form-group col-md-3">
+			<label for="pieHabil">Pie Habil</label>
+			<select class="form-control" name="pieHabil" required>
+				{% for pie in pieHabil %}
+					{% if pie == jugador.pieHabil %}
+						<option selected>{{pie}}</option>
+					{% else %}
+						<option>{{pie}}</option>
+					{% endif %}	
+				{% endfor %}
+			</select>         		
+		</div>
+		<div class="form-group col-md-3">
+			<label for="posicion">Posicion</label>
+			<select class="form-control" name="posicion" required>
+				{% for posicion in posiciones %}
+					{% if posicion == jugador.posicion %}
+						<option selected>{{posicion}}</option>
+					{% else %}
+						<option>{{posicion}}</option>
+					{% endif %}
+				{% endfor %}   
+			</select>    		
+		</div>
+		<div class="form-group col-md-3">
+			<label for="foto">Foto</label>
+			<input type="file" class="form-control-file" id="foto" name="foto">
+		</div>		
+	</div>
+	<div>
+		<button type="button" class="btn btn-warning" id="cancelarForm" onclick="goBack()">Cancelar</button>
+		<button type="submit" class="btn btn-success">Guardar</button>
+	</div>
+</form>
+<script type="text/javascript" src="{{ asset('js/equipos.js') }}"></script>
+{% endblock %}

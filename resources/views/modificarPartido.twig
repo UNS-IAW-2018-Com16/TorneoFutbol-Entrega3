@@ -72,9 +72,10 @@
 		</div>
 	</div>
 	<div>
-		<button type="button" class="btn btn-warning" id="cancelarForm" onclick="goBack()">Cancelar</button>
+		<button type="button" class="btn btn-warning" id="cancelarForm" href="#modalCancelar" data-toggle="modal">Cancelar</button>
 		<button type="submit" class="btn btn-success">Guardar</button>		
 	</div>
 </form>
+{% include 'modalCancelar.twig' %}
 <script type="text/javascript" src="{{ asset('js/fixture.js') }}"></script>
 {% endblock %}
